@@ -24,7 +24,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('DJANGO_SECRET_NIMRA', None),
+SECRET_KEY = os.getenv('DJANGO_SECRET_NIMRA', None)
+print("------------------", SECRET_KEY)
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -62,9 +63,8 @@ SIMPLE_JWT = {
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
     "UPDATE_LAST_LOGIN": False,
-
+    "SIGNING_KEY": SECRET_KEY,
     "ALGORITHM": "HS256",
-    "VERIFYING_KEY": "",
     "AUDIENCE": None,
     "ISSUER": None,
     "JSON_ENCODER": None,
@@ -113,7 +113,7 @@ ROOT_URLCONF = 'core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'static')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -132,23 +132,23 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'HOST': os.getenv('DB_HOST_NIMRA', None),
-        'USER': os.getenv('DB_USER_NIMRA', None),
-        'PASSWORD': os.getenv('DB_PWD_NIMRA', None),
-        'NAME': os.getenv('DB_NAME_NIMRA', None),
-        # 'PORT': os.getenv('DB_PORT_NIMRA', None)
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'HOST': os.getenv('DB_HOST_NIMRA', None),
+#         'USER': os.getenv('DB_USER_NIMRA', None),
+#         'PASSWORD': os.getenv('DB_PWD_NIMRA', None),
+#         'NAME': os.getenv('DB_NAME_NIMRA', None),
+#         # 'PORT': os.getenv('DB_PORT_NIMRA', None)
+#     }
+# }
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
@@ -184,6 +184,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = 'static'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -199,5 +200,10 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
+
+STATICFILES_DIRS = (
+    os.path.join(os.path.join(BASE_DIR, 'frontend-songs'), 'build', 'static'),
+    os.path.join(os.path.join(BASE_DIR, 'frontend-songs'), 'build'),
+)
 
 CORS_ALLOW_ALL_ORIGINS = True
